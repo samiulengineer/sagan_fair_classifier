@@ -13,7 +13,7 @@ from config import config, initializing
 initializing()
 
 
-def sample_model(n_features, n_sensitive):
+def sample_model(n_features):
     inputs = Input(shape=(n_features,))
     dense1 = Dense(32, activation='relu')(inputs)
     dropout1 = Dropout(0.2)(dense1)
@@ -22,13 +22,11 @@ def sample_model(n_features, n_sensitive):
     dense3 = Dense(32, activation="relu")(dropout2)
     dropout3 = Dropout(0.2)(dense3)
     outputs = Dense(1, activation='sigmoid')(dropout3)
-    # outputs = [Dense(1, activation='sigmoid')(dense3)
-    #            for _ in range(n_sensitive)]
     model = Model(inputs=[inputs], outputs=[outputs])
     return model
 
 
-def get_model(n_features, n_sensitive):
+def get_model(n_features):
     """
     Summary:
         create new model object for training
@@ -41,10 +39,10 @@ def get_model(n_features, n_sensitive):
     models = {'sample_model': sample_model
               }
 
-    return models['sample_model'](n_features, n_sensitive)
+    return models['sample_model'](n_features)
 
 
 if __name__ == '__main__':
 
-    model = get_model(94, 2)
+    model = get_model(94)
     model.summary()

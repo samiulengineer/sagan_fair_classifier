@@ -18,7 +18,20 @@ def read_data(path):
                               na_values="?", sep=r'\s*,\s*', engine='python')
                   .loc[lambda df: df['race'].isin(['White', 'Black'])])
 
-    # sensitive attributes; we identify 'race' and 'sex' as sensitive attributes
+    return input_data
+
+
+def cleaning_data(input_data):
+
+    input_data = input_data.dropna()  # remove null values
+
+    input_data = input_data.drop_duplicates()  # remove all duplicate value
+
+    return input_data
+
+
+def get_sensitive_attrib(input_data):
+
     sensitive_attribs = ['race', 'sex']
     Z = (input_data.loc[:, sensitive_attribs]
          .assign(race=lambda df: (df['race'] == 'White').astype(int),
@@ -32,18 +45,16 @@ def read_data(path):
          .drop(columns=['target', 'race', 'sex'])
          .fillna('Unknown').pipe(pd.get_dummies, drop_first=True))
 
-    print(f"features X: {X.shape[0]} samples, {X.shape[1]} attributes")
-    print(f"targets y: {y.shape[0]} samples")
-    print(f"sensitives Z: {Z.shape[0]} samples, {Z.shape[1]} attributes")
     return X, y, Z
 
 
 def scale_df(df, scaler):
+
     return pd.DataFrame(scaler.transform(df), columns=df.columns, index=df.index)
 
 
 def data_split(X, y, z):
-    # split into train/test set
+
     X_train, X_test, y_train, y_test, Z_train, Z_test = train_test_split(X, y, z, test_size=config["split_size"],
                                                                          stratify=y, random_state=7)
 
@@ -54,6 +65,7 @@ def data_split(X, y, z):
 
 
 def compute_class_weights(data_set, classes=[0, 1]):
+
     class_weights = []
     if len(data_set.shape) == 1:
         balanced_weights = compute_class_weight(
@@ -77,7 +89,16 @@ def compute_class_weights(data_set, classes=[0, 1]):
 
 def get_dataloader(test=False):
 
-    X, y, z = read_data(config["dataset_dir"])
+    # read dataset
+    input_data = read_data(config["dataset_dir"])
+
+    # cleaning the dataset
+    input_data = cleaning_data(input_data)
+
+    X, y, z = get_sensitive_attrib(input_data)
+    print(f"features X: {X.shape[0]} samples, {X.shape[1]} attributes")
+    print(f"targets y: {y.shape[0]} samples")
+    print(f"sensitives Z: {z.shape[0]} samples, {z.shape[1]} attributes")
 
     class_weights = compute_class_weights(z)
 
@@ -90,28 +111,10 @@ def get_dataloader(test=False):
     X_val = X_val.pipe(scale_df, scaler)
     X_test = X_test.pipe(scale_df, scaler)
 
-    train_ds = tf.data.Dataset.from_tensor_slices(
-        (X_train, y_train)).batch(config["batch_size"])
-    Z_train_ds = tf.data.Dataset.from_tensor_slices(
-        (Z_train)).batch(config["batch_size"])
-
-    val_ds = tf.data.Dataset.from_tensor_slices(
-        (X_val, y_val)).batch(config["batch_size"])
-    Z_val_ds = tf.data.Dataset.from_tensor_slices(
-        (Z_val)).batch(config["batch_size"])
-
-    test_ds = tf.data.Dataset.from_tensor_slices(
-        (X_test, y_test)).batch(config["batch_size"])
-    Z_test_ds = tf.data.Dataset.from_tensor_slices(
-        (Z_test)).batch(config["batch_size"])
-
     if test == True:
-        return test_ds, Z_test_ds
+        return X_test, y_test, Z_test
 
-    return train_ds, Z_train_ds, val_ds, Z_val_ds, class_weights
-    # for x, y in train_ds:
-    #     print(x[0], y[1])
-    #     break
+    return X_train, y_train, X_val, y_val, Z_train, Z_val          # , class_weights
 
 
 # get_dataloader()
