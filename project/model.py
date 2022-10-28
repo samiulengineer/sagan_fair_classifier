@@ -13,7 +13,19 @@ from config import config, initializing
 initializing()
 
 
-def sample_model(n_features):
+def mlAlgo(n_features):
+    model = {"Logistic Regression": LogisticRegression(),
+             "KNN": KNeighborsClassifier(n_neighbors=50),
+             "Decision tree": DecisionTreeClassifier(),
+             "Naive bayes": GaussianNB(),
+             "Linear SVM": SVC(kernel='linear'),
+             "Gaussian SVM": SVC(kernel='rbf'),
+             "Random forest": RandomForestClassifier(n_estimators=100)}
+
+    return model
+
+
+def clf(n_features):
     inputs = Input(shape=(n_features,))
     dense1 = Dense(32, activation='relu')(inputs)
     dropout1 = Dropout(0.2)(dense1)
@@ -36,13 +48,15 @@ def get_model(n_features):
         model (object): keras.Model class object
     """
 
-    models = {'sample_model': sample_model
+    models = {'clf': clf,
+              'mlalgo': mlAlgo
               }
 
-    return models['sample_model'](n_features)
+    return models[config["model_name"]](n_features)
 
 
 if __name__ == '__main__':
 
     model = get_model(94)
-    model.summary()
+    # model.summary()
+    print(type(model))

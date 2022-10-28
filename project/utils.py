@@ -19,6 +19,8 @@ def create_paths(test=False):
     Return:
         create directories
     """
+    print(config['csv_log_dir'])
+    print(config['tensorboard_log_dir'])
     if test:
         pathlib.Path(config['prediction_test_dir']).mkdir(
             parents=True, exist_ok=True)

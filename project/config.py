@@ -4,7 +4,7 @@ from datetime import datetime
 config = {
     # "root_dir": '/home/mdsamiul/github_project/fair_classifier_ml/',
     # "dataset_dir": "/home/mdsamiul/github_project/fair_classifier_ml/data/adult.data",
-    "root_dir": 'E:/canada syntex/Github/fair_classifier_ml/data',
+    "root_dir": 'E:/canada syntex/Github/fair_classifier_ml',
     "dataset_dir": "E:/canada syntex/Github/fair_classifier_ml/data/adult.data",
 
     "batch_size": 128,
@@ -13,8 +13,8 @@ config = {
     "learning_rate": 0.0003,
     "pRuleThreshold": 0.3,
 
-    "model_name": "clf",
-    "experiment": "fairML",
+    "model_name": "mlalgo",    # mlalgo=ML algorithms, clf=simple model
+    "experiment": "simpleModel",
     "load_model_dir": None,
     "load_model_name": "clf_fairML_epochs_20_13-Oct-22.hdf5",
 
