@@ -1,3 +1,4 @@
+from sklearn_genetic.callbacks import ProgressBar
 import time
 import os
 import tensorflow as tf
@@ -29,14 +30,14 @@ metrics = list(get_metrics().values())
 # Callbacks
 # ----------------------------------------------------------------------------------------------
 loggers = SelectCallbacks((X_val, y_val), model)
-
+callback = ProgressBar()
 if config["model_name"] == "mlalgo":
     t0 = time.time()
     accuracy = []
     print("Model name \t\t Accuracy")
     for i in model.values():
         mo = i
-        mo.fit(X_train, y_train)
+        mo.fit(X_train, y_train, callbacks=callback)
         mo_pred = mo.predict(X_val)
         acc = accuracy_score(y_val, mo_pred)
         accuracy.append(acc)
