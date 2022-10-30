@@ -13,7 +13,7 @@ config = {
     "learning_rate": 0.0003,
     "pRuleThreshold": 0.3,
 
-    "model_name": "clf",    # mlalgo=ML algorithms, clf=simple model
+    "model_name": "mlalgo",    # mlalgo=ML algorithms, clf=simple model
     "experiment": "simpleModel",
     "load_model_dir": None,
     "load_model_name": "aclf_fairML_epochs_20_13-Oct-22.hdf5",

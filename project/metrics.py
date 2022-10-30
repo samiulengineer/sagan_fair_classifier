@@ -41,8 +41,9 @@ def p_rule(y_pred, z_values, threshold=config["pRuleThreshold"]):
 def fairness_metrics(y_true, y_pred):
 
     # TP = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    # TP = tf.keras.metrics.TruePositives()
-    # TP.update_state(y_pred, y_true)
+
+    TP = tf.keras.metrics.TruePositives()
+    TP.update_state(y_pred, y_true)
     # FP = tf.keras.metrics.FalsePositives()
     # FP.update_state(y_true, y_pred)
     # TN = tf.keras.metrics.TrueNegatives()
@@ -71,9 +72,9 @@ def fairness_metrics(y_true, y_pred):
     # PPP = (TP + FP) / N
 
     tp = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    tn = K.sum(K.round(K.clip((1 - y_true) * (1 - y_pred), 0, 1)))
-    fp = K.sum(K.round(K.clip((1 - y_true) * y_pred, 0, 1)))
-    fn = K.sum(K.round(K.clip(y_true * (1 - y_pred), 0, 1)))
+    # tn = K.sum(K.round(K.clip((1 - y_true) * (1 - y_pred), 0, 1)))
+    # fp = K.sum(K.round(K.clip((1 - y_true) * y_pred, 0, 1)))
+    # fn = K.sum(K.round(K.clip(y_true * (1 - y_pred), 0, 1)))
 
     return tp  # np.array([ACC, TPR, FPR, FNR, PPP])
 
@@ -94,7 +95,7 @@ def get_metrics():
         # 'TN': tf.keras.metrics.TrueNegatives(),
         # 'FN': tf.keras.metrics.FalseNegatives(),
         # 'AUC': tf.keras.metrics.AUC(),
-        'fairness_metrics': BinaryTruePositives()
+        'fairness_metrics': fairness_metrics
     }
 
 
