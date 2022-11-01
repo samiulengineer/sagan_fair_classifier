@@ -132,7 +132,7 @@ ENV/
 .pytest_cache/
 
 # data
-.data/
+#.data/
 Datasets/
 mnist/
 legacy/checkpoints/
@@ -165,7 +165,7 @@ cifar-10-batches-py
 # ctags
 tags
 # data
-data
+#data
 *trace
 prediction
 visualization
