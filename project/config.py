@@ -2,14 +2,14 @@ from datetime import datetime
 
 
 config = {
-    # "root_dir": '/home/mdsamiul/github_project/fair_classifier_ml/',
-    # "dataset_dir": "/home/mdsamiul/github_project/fair_classifier_ml/data/adult.data",
-    "root_dir": 'E:/canada syntex/Github/fair_classifier_ml',
-    "dataset_dir": "E:/canada syntex/Github/fair_classifier_ml/data/adult.data",
+    "root_dir": '/home/mdsamiul/github_project/fair_classifier_ml/',
+    "dataset_dir": "/home/mdsamiul/github_project/fair_classifier_ml/data/adult.data",
+    # "root_dir": 'E:/canada syntex/Github/fair_classifier_ml',
+    # "dataset_dir": "E:/canada syntex/Github/fair_classifier_ml/data/adult.data",
 
     "batch_size": 128,
     "epochs": 20,
-    "split_size": 0.8,
+    "test_size": 0.2,
     "learning_rate": 0.0003,
     "pRuleThreshold": 0.3,
 
