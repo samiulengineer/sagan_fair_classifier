@@ -178,13 +178,13 @@ class FairClassifier(object):
                     self.fm_metrics.loc[idx, sensitive_attr] = fairness_metrics(y_val.values, (y_pred>0.5).values, z_val[sensitive_attr].values)
 
 
-                # pathlib.Path(config['visualization_dir'] + f'output_{self.n_features}').mkdir(parents=True, exist_ok=True)
-                # display.clear_output(wait=True)
-                # plot_distributions(y_pred, z_val, idx+1, self._val_metrics.loc[idx],
-                #                    self._fairness_metrics.loc[idx], 
-                #                    self.fm_metrics.loc[idx],
-                #                    fname = config['visualization_dir'] + f'output_{self.n_features}/{idx+1:08d}.jpg' if save_figs else None)
-                # plt.show(plt.gcf())
+                pathlib.Path(config['visualization_dir'] + f'output_{self.n_features}').mkdir(parents=True, exist_ok=True)
+                display.clear_output(wait=True)
+                plot_distributions(y_pred, z_val, idx+1, self._val_metrics.loc[idx],
+                                   self._fairness_metrics.loc[idx], 
+                                   self.fm_metrics.loc[idx],
+                                   fname = config['visualization_dir'] + f'output_{self.n_features}/{idx+1:08d}.jpg' if save_figs else None)
+                plt.show(plt.gcf())
             
             
             # train adverserial
