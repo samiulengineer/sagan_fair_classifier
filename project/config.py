@@ -59,4 +59,4 @@ def initializing():
         '/prediction/' + config['model_name']+'/validation/'
 
     # Create visualization directory
-    config['visualization_dir'] = config['root_dir'] + '/visualization/'
+    config['visualization_dir'] = config['root_dir'] + '/visualization2/'

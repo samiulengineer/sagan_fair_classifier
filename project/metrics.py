@@ -81,7 +81,7 @@ def fairness_metrics(y_val, y_pred, z_values):
 
     fm_ratio = fm_0 / fm_1
     #print(fm_ratio)
-    # res = "TPR:{:.2f} FPR:{:.2f} FNR:{:.2f} PPP:{:.2f}".format(fm_ratio[0], fm_ratio[1], fm_ratio[2], fm_ratio[3])
+    # res = "EOp:{:.2f} EO:{:.2f} DI:{:.2f}".format(fm_ratio[0], fm_ratio[1], fm_ratio[2], fm_ratio[3])
 
     # res ={'TPR': fm_ratio[0],
     #       'FPR': fm_ratio[1],

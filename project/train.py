@@ -1,8 +1,13 @@
 import os
+import gc
+# import psutil
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tqdm import tqdm
+from tensorflow import keras
+import warnings
+warnings.filterwarnings("ignore")
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -17,15 +22,22 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 tf.config.experimental.list_physical_devices('gpu')
+
+# process = psutil.Process(os.getpid())
 # tf.config.run_functions_eagerly(True)  # to use .numpy()
 
 # creating directory
 create_paths()
 
 # threshold = [0.1, 0.5, 1.5, 3.1, 4.5, 5.5, 10.5]
-threshold = np.arange(0.1, 10, 0.1)
+threshold = np.round(np.arange(0.1, 10, 0.5), 2)
 models = []
+
+# prev_mem = 0
+# first_mem = 0
+
 for i in threshold:
+        print("---------------------------")
         print("For Attention Module:", i)
         X, y, Z = load_ICU_data(config['dataset_dir'], i)
 
@@ -46,11 +58,26 @@ for i in threshold:
 
         # pre-train both adverserial and classifier networks
         clf.pretrain(X_train, y_train, Z_train, verbose=0, epochs=5)
-        clf.fit(X_train, y_train, Z_train, 
+        
+        clf.fit(X_train, y_train, Z_train, i,
                 validation_data=(X_test, y_test, Z_test),
-                T_iter=100, save_figs=True, verbose=1)
+                T_iter=100, save_figs=True, verbose=0)
         
         models.append(clf)
+        
+        # clean up
+        _ = gc.collect()
+        keras.backend.clear_session()
+        
+        # # show memory usage
+        # mem = process.memory_info().rss
+        # if i == 0:
+        #         first_mem = mem
+        # print(
+        #         f"iteration {i}: rss {mem >> 20} MB ({(mem - prev_mem) >> 10:+} KB; "
+        #         + f"{((mem - first_mem) // max(1, i)) >> 10:+} KB/it.)"
+        # )
+        # prev_mem = mem
 
 
 # Attention Module vs P% rule curve plot
