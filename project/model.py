@@ -70,40 +70,16 @@ class FairClassifier(object):
     # construct model ----------------------------------------------------------
 
     # clf net    input layer + 3 hidden layer + output layer
-    # def _create_clf_net(self, inputs):
-    #     dense1 = Dense(32, activation='relu')(inputs)
-    #     dropout1 = Dropout(0.2)(dense1)
-    #     dense2 = Dense(32, activation='relu')(dropout1)
-    #     dropout2 = Dropout(0.2)(dense2)
-    #     dense3 = Dense(32, activation='relu')(dropout2)
-    #     dropout3 = Dropout(0.2)(dense3)
-    #     outputs = Dense(1, activation='sigmoid', name='y')(dropout3)
-    #     return Model(inputs=[inputs], outputs=[outputs])
-    
     def _create_clf_net(self, inputs):
         dense1 = Dense(32, activation='relu')(inputs)
         dropout1 = Dropout(0.2)(dense1)
-        
         dense2 = Dense(32, activation='relu')(dropout1)
         dropout2 = Dropout(0.2)(dense2)
-        
         dense3 = Dense(32, activation='relu')(dropout2)
         dropout3 = Dropout(0.2)(dense3)
-        
-        dense4 = Dense(32, activation='relu')(dropout3)
-        dropout4 = Dropout(0.2)(dense4)
-        
-        dense5 = Dense(32, activation='relu')(dropout4)
-        dropout5 = Dropout(0.2)(dense5)
-        
-        dense6 = Dense(32, activation='relu')(dropout5)
-        dropout6 = Dropout(0.2)(dense6)
-        
-        dense7 = Dense(32, activation='relu')(dropout6)
-        dropout7 = Dropout(0.2)(dense7)
-        
-        outputs = Dense(1, activation='sigmoid', name='y')(dropout7)
+        outputs = Dense(1, activation='sigmoid', name='y')(dropout3)
         return Model(inputs=[inputs], outputs=[outputs])
+    
     
     # adv net    input layer + 3 hidden layer + output layer * n_sensitive
     def _create_adv_net(self, inputs, n_sensitive):
@@ -155,12 +131,21 @@ class FairClassifier(object):
             for attr_idx in range(n_attr):
                 balanced_weights = compute_class_weight('balanced', classes=classes,
                                                         y=np.array(data_set)[:,attr_idx])
+                
+                # m factor
+                m = balanced_weights[0]*0.6
+                balanced_weights = [m, balanced_weights[1]]
+            
                 class_weights.append(dict(zip(classes, balanced_weights)))
         return class_weights          
     
     # compute weights based on targets
     def _compute_target_class_weights(self, y, classes=[0, 1]):
         balanced_weights =  compute_class_weight('balanced', classes=classes, y=y)
+        
+        m = balanced_weights[0]*0.6
+        balanced_weights = [m, balanced_weights[1]]
+        
         class_weights = {'y': dict(zip(classes, balanced_weights))}
         return class_weights
         
@@ -183,9 +168,9 @@ class FairClassifier(object):
         if validation_data is not None:
             x_val, y_val, z_val = validation_data
         
-        class_weight_clf = [{0:1., 1:1.}]
+        class_weight_clf = [{0:1., 1:0.5}]
         class_weight_adv = self._compute_class_weights(z)
-        class_weight_clf_w_adv = class_weight_clf+class_weight_adv
+        class_weight_clf_w_adv = class_weight_clf + class_weight_adv
         self._val_metrics = pd.DataFrame()
         self._fairness_metrics = pd.DataFrame()
         self.fm_metrics = pd.DataFrame(columns=z_val.columns)  
