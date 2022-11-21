@@ -70,14 +70,39 @@ class FairClassifier(object):
     # construct model ----------------------------------------------------------
 
     # clf net    input layer + 3 hidden layer + output layer
+    # def _create_clf_net(self, inputs):
+    #     dense1 = Dense(32, activation='relu')(inputs)
+    #     dropout1 = Dropout(0.2)(dense1)
+    #     dense2 = Dense(32, activation='relu')(dropout1)
+    #     dropout2 = Dropout(0.2)(dense2)
+    #     dense3 = Dense(32, activation='relu')(dropout2)
+    #     dropout3 = Dropout(0.2)(dense3)
+    #     outputs = Dense(1, activation='sigmoid', name='y')(dropout3)
+    #     return Model(inputs=[inputs], outputs=[outputs])
+    
     def _create_clf_net(self, inputs):
         dense1 = Dense(32, activation='relu')(inputs)
         dropout1 = Dropout(0.2)(dense1)
+        
         dense2 = Dense(32, activation='relu')(dropout1)
         dropout2 = Dropout(0.2)(dense2)
+        
         dense3 = Dense(32, activation='relu')(dropout2)
         dropout3 = Dropout(0.2)(dense3)
-        outputs = Dense(1, activation='sigmoid', name='y')(dropout3)
+        
+        dense4 = Dense(32, activation='relu')(dropout3)
+        dropout4 = Dropout(0.2)(dense4)
+        
+        dense5 = Dense(32, activation='relu')(dropout4)
+        dropout5 = Dropout(0.2)(dense5)
+        
+        dense6 = Dense(32, activation='relu')(dropout5)
+        dropout6 = Dropout(0.2)(dense6)
+        
+        dense7 = Dense(32, activation='relu')(dropout6)
+        dropout7 = Dropout(0.2)(dense7)
+        
+        outputs = Dense(1, activation='sigmoid', name='y')(dropout7)
         return Model(inputs=[inputs], outputs=[outputs])
     
     # adv net    input layer + 3 hidden layer + output layer * n_sensitive
@@ -87,7 +112,7 @@ class FairClassifier(object):
         dense3 = Dense(32, activation='relu')(dense2)
         outputs = [Dense(1, activation='sigmoid')(dense3) for _ in range(n_sensitive)]
         return Model(inputs=[inputs], outputs=outputs)
-
+    
     # compile  -----------------------------------------------------------------
 
     # compile clf

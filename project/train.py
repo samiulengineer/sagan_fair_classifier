@@ -19,7 +19,7 @@ from config import config, initializing
 initializing()
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 tf.config.experimental.list_physical_devices('gpu')
 
@@ -30,7 +30,8 @@ tf.config.experimental.list_physical_devices('gpu')
 create_paths()
 
 # threshold = [0.1, 0.5, 1.5, 3.1, 4.5, 5.5, 10.5]
-threshold = np.round(np.arange(0.1, 10, 0.5), 2)
+# threshold = np.round(np.arange(0.1, 10, 0.5), 2)
+threshold = [0.1]
 models = []
 
 # prev_mem = 0
@@ -61,7 +62,7 @@ for i in threshold:
         
         clf.fit(X_train, y_train, Z_train, i,
                 validation_data=(X_test, y_test, Z_test),
-                T_iter=100, save_figs=True, verbose=0)
+                T_iter=300, save_figs=True, verbose=1)
         
         models.append(clf)
         
@@ -82,15 +83,15 @@ for i in threshold:
 
 # Attention Module vs P% rule curve plot
 # ----------------------------------------------------------------------------------------------
-p_race = []
-p_sex = []
-for i, j in zip(models, threshold):
-    p_race.append(i._fairness_metrics.loc[40, 'race'])
-    p_sex.append(i._fairness_metrics.loc[40, 'sex'])
+# p_race = []
+# p_sex = []
+# for i, j in zip(models, threshold):
+#     p_race.append(i._fairness_metrics.loc[40, 'race'])
+#     p_sex.append(i._fairness_metrics.loc[40, 'sex'])
     
-fname = config['visualization_dir'] + 'P_ruleVsAttention.jpg'
-ylabel = "P%-rule"
-plot_curve(threshold, p_race, p_sex, fname, ylabel)
+# fname = config['visualization_dir'] + 'P_ruleVsAttention.jpg'
+# ylabel = "P%-rule"
+# plot_curve(threshold, p_race, p_sex, fname, ylabel)
 
 
 # ----------------------------------------------------------------------------------------------
