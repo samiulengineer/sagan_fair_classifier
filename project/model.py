@@ -131,21 +131,12 @@ class FairClassifier(object):
             for attr_idx in range(n_attr):
                 balanced_weights = compute_class_weight('balanced', classes=classes,
                                                         y=np.array(data_set)[:,attr_idx])
-                
-                # m factor
-                m = balanced_weights[0]*0.6
-                balanced_weights = [m, balanced_weights[1]]
-            
                 class_weights.append(dict(zip(classes, balanced_weights)))
         return class_weights          
     
     # compute weights based on targets
     def _compute_target_class_weights(self, y, classes=[0, 1]):
         balanced_weights =  compute_class_weight('balanced', classes=classes, y=y)
-        
-        m = balanced_weights[0]*0.6
-        balanced_weights = [m, balanced_weights[1]]
-        
         class_weights = {'y': dict(zip(classes, balanced_weights))}
         return class_weights
         
@@ -168,7 +159,7 @@ class FairClassifier(object):
         if validation_data is not None:
             x_val, y_val, z_val = validation_data
         
-        class_weight_clf = [{0:1., 1:0.5}]
+        class_weight_clf = [{0:1., 1:1}]
         class_weight_adv = self._compute_class_weights(z)
         class_weight_clf_w_adv = class_weight_clf + class_weight_adv
         self._val_metrics = pd.DataFrame()
