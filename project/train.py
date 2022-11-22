@@ -19,7 +19,7 @@ from config import config, initializing
 initializing()
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 tf.config.experimental.list_physical_devices('gpu')
 
@@ -62,7 +62,7 @@ for i in threshold:
         
         clf.fit(X_train, y_train, Z_train, i,
                 validation_data=(X_test, y_test, Z_test),
-                T_iter=300, save_figs=True, verbose=1)
+                T_iter=100, save_figs=True, verbose=1)
         
         models.append(clf)
         

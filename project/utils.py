@@ -167,15 +167,15 @@ def plot_distributions(y, Z, atten_wei, iteration=None, val_metrics=None, p_rule
     
     fig.text(1.0, 0.4,
              '\n'+ 'Race:  P%rule={:.0f}%'.format(p_rules['race']) + 
-             '\n' + '           EOp={:.1f}'.format(fm['race'][0]) +
-             '\n' + '           EO={:.1f}'.format(fm['race'][1]) +
+            #  '\n' + '           EOp={:.1f}'.format(fm['race'][0]) +
+            #  '\n' + '           EO={:.1f}'.format(fm['race'][1]) +
              '\n' + '           DI={:.1f}'.format(fm['race'][3]) ,
              fontsize='14')
     
     fig.text(1.0, 0.15,
              '\n'+ 'Sex:  P%rule={:.0f}%'.format(p_rules['sex']) + 
-             '\n' + '         EOp={:.1f}'.format(fm['sex'][0]) +
-             '\n' + '         EO={:.1f}'.format(fm['sex'][1]) +
+            #  '\n' + '         EOp={:.1f}'.format(fm['sex'][0]) +
+            #  '\n' + '         EO={:.1f}'.format(fm['sex'][1]) +
              '\n' + '         DI={:.1f}'.format(fm['sex'][3]),
              fontsize='14')
     
