@@ -82,12 +82,14 @@ def load_ICU_data(path, threshold=0):
 
     # features; note that the 'target' and sentive attribute columns are dropped
     remove_features.extend(['target', 'race', 'sex'])
-    X = (input_data
+    X_proxy = (input_data
          .drop(columns=remove_features)
          .fillna('Unknown')   # The fillna() function is used to fill NA/NaN values using the specified method
          .pipe(pd.get_dummies, drop_first=True)) # Use .pipe when chaining together functions that expect Series, DataFrames or GroupBy objects.
                                                  # pd.get_dummies=Convert categorical variable into dummy/indicator variables
                                                  # drop_first: bool function(default False) Whether to get k-1 dummies out of k categorical levels by removing the first level.
+    
+    
     print(f"features X: {X.shape[0]} samples, {X.shape[1]} attributes")
     print(f"targets y: {y.shape[0]} samples")
     print(f"sensitives Z: {Z.shape[0]} samples, {Z.shape[1]} attributes")

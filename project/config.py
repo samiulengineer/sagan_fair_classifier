@@ -25,7 +25,6 @@ config = {
     "early_stop": False,
     "checkpoint": True,
     "patience": 300  # required for early_stopping, if accuracy does not change for 500 epochs, model will stop automatically
-
 }
 
 

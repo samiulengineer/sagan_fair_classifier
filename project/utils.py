@@ -130,6 +130,7 @@ class SelectCallbacks(keras.callbacks.Callback):
 # ----------------------------------------------------------------------------------------------
 
 def plot_distributions(y, Z, atten_wei, iteration=None, val_metrics=None, p_rules=None, fm= None, fname=None):
+    
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
     legend={'race': ['black','white'],
             'sex': ['female','male']}
