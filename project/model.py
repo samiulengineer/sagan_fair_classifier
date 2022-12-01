@@ -26,14 +26,26 @@ from config import config, initializing
 
 initializing()
 
-
+# Fari classifier
+#------------------------------------------------------------------------------------------------------
 class FairClassifier(object):
+    """
+    Summary:
+        fair classifier
+    Arguments:
+        n_features (int):  number of features
+        n_sensitive (int): number of sensitive features
+        lambdas (float): loss weight
+    Return:
+        prediction
+    """
     
-    def __init__(self, n_features, n_sensitive, lambdas):
+    def __init__(self, n_features, n_features_proxy, n_sensitive, lambdas):
         self.lambdas = lambdas
         self.n_features = n_features
 
         clf_inputs = Input(shape=(n_features,))
+        adv_proxy_inputs = Input(shape=(n_features_proxy,))
         adv_inputs = Input(shape=(1,))
         
         clf_net = self._create_clf_net(clf_inputs)
@@ -44,8 +56,8 @@ class FairClassifier(object):
 
         # compile model. Three model compiletion: clf, clf_w_adv and adv
         self._clf = self._compile_clf(clf_net)
-        self._clf_w_adv = self._compile_clf_w_adv(clf_inputs, clf_net, adv_net)
-        self._adv = self._compile_adv(clf_inputs, clf_net, adv_net, n_sensitive)
+        self._clf_w_adv = self._compile_clf_w_adv(adv_proxy_inputs, clf_net, adv_net)
+        self._adv = self._compile_adv(adv_proxy_inputs, clf_net, adv_net, n_sensitive)
         # print(self._adv.summary())
 
         self._val_metrics = None
@@ -141,7 +153,7 @@ class FairClassifier(object):
         return class_weights
         
     
-    def pretrain(self, x, y, z, epochs=10, verbose=0):
+    def pretrain(self, x, y, z, x_proxy, y_proxy, z_proxy, epochs=10, verbose=0):
         self._trainable_clf_net(True)
         self._clf.fit(x.values, y.values, epochs=epochs, verbose=verbose) # training clf
         self._trainable_clf_net(False)
@@ -149,7 +161,7 @@ class FairClassifier(object):
         self._trainable_adv_net(True)
         class_weight_adv = self._compute_class_weights(z)
         # passing z value instead of y and split the z into two
-        self._adv.fit(x.values, np.hsplit(z.values, z.shape[1]), class_weight=class_weight_adv, # Split an array into multiple sub-arrays horizontally (column-wise)
+        self._adv.fit(x_proxy.values, np.hsplit(z_proxy.values, z_proxy.shape[1]), class_weight=class_weight_adv, # Split an array into multiple sub-arrays horizontally (column-wise)
                       epochs=epochs, verbose=verbose) # training adv
         
     
@@ -202,53 +214,3 @@ class FairClassifier(object):
             self._clf_w_adv.fit(x.values, [y.values]+np.hsplit(z.values, z.shape[1]), batch_size=len(x), 
                                 class_weight=class_weight_clf_w_adv, epochs=5, verbose=verbose)
 
-
-
-
-def mlAlgo(n_features):
-    model = {"Logistic Regression": LogisticRegression(),
-             "KNN": KNeighborsClassifier(n_neighbors=50),
-             "Decision tree": DecisionTreeClassifier(),
-             "Naive bayes": GaussianNB(),
-             "Linear SVM": SVC(kernel='linear'),
-             "Gaussian SVM": SVC(kernel='rbf'),
-             "Random forest": RandomForestClassifier(n_estimators=100)}
-
-    return model
-
-
-def clf(n_features):
-    inputs = Input(shape=(n_features,))
-    dense1 = Dense(32, activation='relu')(inputs)
-    dropout1 = Dropout(0.2)(dense1)
-    dense2 = Dense(32, activation='relu')(dropout1)
-    dropout2 = Dropout(0.2)(dense2)
-    dense3 = Dense(32, activation="relu")(dropout2)
-    dropout3 = Dropout(0.2)(dense3)
-    outputs = Dense(1, activation='sigmoid')(dropout3)
-    model = Model(inputs=[inputs], outputs=[outputs])
-    return model
-
-
-def get_model(n_features):
-    """
-    Summary:
-        create new model object for training
-    Arguments:
-        config (dict): Configuration directory
-    Return:
-        model (object): keras.Model class object
-    """
-
-    models = {'clf': clf,
-              'mlalgo': mlAlgo
-              }
-
-    return models[config["model_name"]](n_features)
-
-
-if __name__ == '__main__':
-
-    model = get_model(94)
-    # model.summary()
-    print(type(model))
