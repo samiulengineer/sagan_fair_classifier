@@ -16,42 +16,35 @@ Here, we will train a model for making income level predictions, analyse the fai
 
 For our experiment we use [Ault UCI](https://archive.ics.uci.edu/ml/datasets/Adult) dataset which can be download from [here](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/). It is also referred to as "Census Income" dataset. Here, we will predict whether or not a person's income is larger than 50K dollar a year. It is not hard to imagine that financial institutions train models on similar data sets and use them to decide whether or not someone is eligible for a loan, or to set the height of an insurance premium. The dataset contain the following features:
 
-- `age`: continuous.
-- `workclass`: Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked.
-- `fnlwgt`: continuous.
- -education: Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.
-- `education-num`: continuous.
-- marital-status: Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse.
-- `occupation`: Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces.
-- `relationship`: Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried.
-- `race`: White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black.
-- `sex`: Female, Male.
-- `capital-gain`: continuous.
-- `capital-loss`: continuous.
-- `hours-per-week`: continuous.
-- `native-country`: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands.
+![Alternate text](/readme/datasetDes.jpeg)
 
 ### Sensitive Features
 
 In the Adult UCI dataset there are two sensitive featues.
 
-- race
+- ### race
 
 Distribution of race in the dataset.
 
 ![Alternate text](/readme/race%20distribution.png)
 
-- sex
+- ### sex
 
 Distribution of sex in the dataset.
 
 ![Alternate text](/readme/gender%20distribution.png)
 
+### Mutual Information
+
+Mutual information is a measure of non-linear association between two variables. It indicates how much the uncertainty around one variable is reduced by observing another. In the below, you can see the mutual information values between each of the 6 features and protected features. Notice the high value between marital-status and sex. This suggests a possible relationship between these variables. In other words, marital-status could be a proxy variable for sex. This is done using the `mutual_info_classif` function.
+
+![Alternate text](/readme/MI.png)
+
 ## Model
 
 Below figure describe our full model and the workflow.
 
-![Alternate text](/readme/SAGAN.png)
+![Alternate text](/readme/SA)
 
 ## Setup
 

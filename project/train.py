@@ -12,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 
 from dataset import load_ICU_data
 from model import FairClassifier
-from utils import create_paths
+from utils import create_paths, plot_smooth_curve
 from config import config, initializing
 initializing()
 
@@ -63,43 +63,27 @@ for i in threshold:
         print("---------------------------")
         print("For Attention Module:", i)
         
-        X_proxy, X_real,  y, Z = load_ICU_data(config['dataset_dir'], i)
+        X, y, Z = load_ICU_data(config['dataset_dir'], i)
 
         # split into train/test set for proxy features
-        X_train_proxy, X_test_proxy, y_train_proxy, y_test_proxy, Z_train_proxy, Z_test_proxy = train_test_split(X_proxy, y, Z, 
+        X_train, X_test, y_train, y_test, Z_train, Z_test = train_test_split(X, y, Z, 
                                                                              test_size=config['test_size'],
                                                                              stratify=y, random_state=7)
-        
-        
-        # split into train/test set for real features
-        X_train, X_test, y_train, y_test, Z_train, Z_test = train_test_split(X_real, y, Z,
-                                                                             test_size=config['test_size'],
-                                                                             stratify=y, random_state=7)
-        
 
         # standardize the real data
         scaler = StandardScaler().fit(X_train)
         scale_df = lambda df, scaler: pd.DataFrame(scaler.transform(df), columns=df.columns, index=df.index)
         X_train = X_train.pipe(scale_df, scaler) 
         X_test = X_test.pipe(scale_df, scaler) 
-        
-        # standardize the proxy data
-        scaler = StandardScaler().fit(X_train_proxy)
-        scale_df = lambda df, scaler: pd.DataFrame(scaler.transform(df), columns=df.columns, index=df.index)
-        X_train_proxy = X_train_proxy.pipe(scale_df, scaler) 
-        X_test_proxy = X_test_proxy.pipe(scale_df, scaler)
-        
-
 
         # initialise FairClassifier
-        clf = FairClassifier(n_features=X_train.shape[1], n_features_proxy=X_train_proxy.shape[1], n_sensitive=Z_train.shape[1],
-                                lambdas=[5., 5.])
+        clf = FairClassifier(n_features=X_train.shape[1], n_sensitive=Z_train.shape[1], lambdas=[5., 5.])
         
 
         # pre-train both adverserial and classifier networks    X_train_proxy, y_train_proxy, Z_train_proxy,
-        clf.pretrain(X_train, y_train, Z_train, X_train_proxy, y_train_proxy, Z_train_proxy, verbose=0, epochs=5)
+        clf.pretrain(X_train, y_train, Z_train, verbose=0, epochs=5)
         
-        clf.fit(X_train_proxy, y_train_proxy, Z_train_proxy, i,
+        clf.fit(X_train, y_train, Z_train, i,
                 validation_data=(X_test, y_test, Z_test),
                 T_iter=config["iteration"], batch_size=config["batch_size"],
                 save_figs=True, verbose=1)
@@ -121,14 +105,15 @@ for i in threshold:
         # prev_mem = mem
 
 
-# Attention Module vs P% rule curve plot
+# Attention Module vs DI % curve plot
 # ----------------------------------------------------------------------------------------------
-# p_race = []
-# p_sex = []
-# for i, j in zip(models, threshold):
-#     p_race.append(i._fairness_metrics.loc[40, 'race'])
-#     p_sex.append(i._fairness_metrics.loc[40, 'sex'])
-    
-# fname = config['visualization_dir'] + 'P_ruleVsAttention.jpg'
-# ylabel = "P%-rule"
-# plot_curve(threshold, p_race, p_sex, fname, ylabel)
+if len(models)>1:
+        p_race = []
+        p_sex = []
+        for i, j in zip(models, threshold):
+                p_race.append(i._fairness_metrics.loc[1, 'race'])
+                p_sex.append(i._fairness_metrics.loc[1, 'sex'])
+        
+        fname = config['visualization_dir'] + 'P_ruleVsAttention.jpg'
+        ylabel = "P%-rule"
+        plot_smooth_curve(threshold, p_race, p_sex, fname, ylabel)
