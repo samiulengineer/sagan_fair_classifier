@@ -143,7 +143,7 @@ ml-runs/
 mlruns/
 *.zip
 *.ckpt
-*.jpg
+# *.jpg
 pytorch\ lightning
 test-reports/
 wandb
