@@ -11,7 +11,7 @@ Luckily, last year's NIPS conference showed that the field is actively investiga
 Some approaches focus on interpretability and transparency by allowing deeper interrogation of complex, black box models. Other approaches, make trained models more robust and fair in their predictions by taking the route of constraining and changing the optimization objective.
 
 Here, we will train a model for making income level predictions, analyse the fairness of its predictions and then show how adversarial training can be used to make it fair. The used approach is based on the 2017 NIPS paper "[Learning to Pivot with Adversarial Networks](https://papers.nips.cc/paper/2017/hash/48ab2f9b45957ab574cf005eb8a76760-Abstract.html)" by Louppe et al.
-
+ddd
 ## Dataset
 
 For our experiment we use [Ault UCI](https://archive.ics.uci.edu/ml/datasets/Adult) dataset which can be download from [here](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/). It is also referred to as "Census Income" dataset. Here, we will predict whether or not a person's income is larger than 50K dollar a year. It is not hard to imagine that financial institutions train models on similar data sets and use them to decide whether or not someone is eligible for a loan, or to set the height of an insurance premium. The dataset contain the following features:
