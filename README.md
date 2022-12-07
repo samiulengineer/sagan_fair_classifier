@@ -22,23 +22,15 @@ For our experiment we use [Ault UCI](https://archive.ics.uci.edu/ml/datasets/Adu
 
 In the Adult UCI dataset there are two sensitive featues.
 
-- ### race
-
-Distribution of race in the dataset.
-
-![Alternate text](/readme/race%20distribution.png)
-
-- ### sex
-
-Distribution of sex in the dataset.
-
-![Alternate text](/readme/gender%20distribution.png)
+<img src="readme/race%20distribution.png" alt="drawing" width="1000"/>   |   <img src="readme/gender%20distribution.png" alt="drawing" width="1000"/>
+:-------------------------:|:-------------------------:
+**Distribution of race in the dataset**  |  **Distribution of sex in the dataset**
 
 ### Mutual Information
 
 Mutual information is a measure of non-linear association between two variables. It indicates how much the uncertainty around one variable is reduced by observing another. In the below, you can see the mutual information values between each of the 6 features and protected features. Notice the high value between marital-status and sex. This suggests a possible relationship between these variables. In other words, marital-status could be a proxy variable for sex. This is done using the `mutual_info_classif` function.
 
-![Alternate text](/readme/MI.png)
+<img src="readme/MI.png" alt="drawing" width="700"/>
 
 ## Model
 
@@ -65,10 +57,24 @@ cd project -->
 After setup the required folders and package run the following command for the experiment.
 
 ```
-python project/train.py --batch_size 64 \
---iteration 10 \
---test_size 0.2 \
---gpu 2
+python project/train.py \
+    --root_dir <YOUR_ROOT_DIR> \
+    --dataset_dir <YOUR_DATAASET_DIR> \
+    --batch_size 64 \
+    --iteration 10 \
+    --gpu YOUR_GPU_NUMBER \
+    --test_size 0.2
+```
+
+Without GPU
+
+```
+python project/train.py \
+    --root_dir <YOUR_ROOT_DIR> \
+    --dataset_dir <YOUR_DATAASET_DIR> \
+    --batch_size 64 \
+    --iteration 10 \
+    --test_size 0.2
 ```
 
 ## Result
