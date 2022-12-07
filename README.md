@@ -62,7 +62,7 @@ python project/train.py \
     --dataset_dir <YOUR_DATAASET_DIR> \
     --batch_size 64 \
     --iteration 10 \
-    --gpu YOUR_GPU_NUMBER \
+    --gpu YGPU_NUMBER> \
     --test_size 0.2
 ```
 
@@ -76,6 +76,8 @@ python project/train.py \
     --iteration 10 \
     --test_size 0.2
 ```
+
+A new folder "visualization" will be created automatically, and for each iteration the result graph with accuracy, ROC AUC and DI (%) will be saved in the visualization directory.
 
 ## Result
 
