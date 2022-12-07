@@ -73,15 +73,13 @@ python project/train.py --batch_size 64 \
 
 ## Result
 
-<img src="readme/best_metrics_new.jpg" alt="drawing" width="500"/>   |   <img src="readme/best_metrics_new.jpg" alt="drawing" width="500"/>
+<img src="readme/best_metrics_new.jpg" alt="drawing" width="1000"/>   |   <img src="readme/best_metrics_new.jpg" alt="drawing" width="1000"/>
 :-------------------------:|:-------------------------:
 **Result from our experiment**  |  **Previously implementated result**
-
 
 >**From our experiment, we got the following result**
 
 ![Alternate text](/readme/adv.gif)
-
 
 ![Alternate text](/readme/DI%20vs%20AttenWei.jpg)   |   ![Alternate text](/readme/accuracy%20vs%20AttenW.jpg)
 :-------------------------:|:-------------------------:
